@@ -1,5 +1,10 @@
 import React, { useMemo, useState } from 'react'
 import { decode, getWordList } from 'utils/weird-text'
+import Section from 'components/atoms/Section'
+import Heading from 'components/atoms/Heading'
+import WordListInput from 'components/molecules/WordListInput'
+import TextAreaSubsection from 'components/organisms/TextAreaSubsection'
+import PreformattedTextSubsection from 'components/organisms/PreformattedTextSubsection'
 
 const DecodeSection = () => {
   const [textToDecode, setTextToDecode] = useState('')
@@ -32,21 +37,22 @@ const DecodeSection = () => {
   }
 
   return (
-    <section>
-      <h2>Decoder</h2>
-      <h3>Input</h3>
-      <h4>Text to decode</h4>
-      <textarea onChange={handleTextToDecodeChange} rows="5" />
+    <Section>
+      <Heading level="2">Decoder</Heading>
 
-      <h4>List of the original words that got encoded</h4>
-      <div>
-        <input onChange={handleUsedWordsChange} type="text" />
-      </div>
+      <TextAreaSubsection
+        title="Input"
+        subtitle="Text to decode"
+        onChange={handleTextToDecodeChange}
+      />
 
-      <h3>Output</h3>
-      <h4>Decoded text</h4>
-      <div>{decodedText}</div>
-    </section>
+      <WordListInput
+        title="List of the original words that got encoded"
+        onChange={handleUsedWordsChange}
+      />
+
+      <PreformattedTextSubsection title="Output" subtitle="Decoded text" text={decodedText} />
+    </Section>
   )
 }
 
