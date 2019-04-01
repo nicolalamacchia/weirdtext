@@ -1,10 +1,10 @@
 import React, { useMemo, useState } from 'react'
-import { decode, getWordList } from 'utils/weird-text'
 import Section from 'components/atoms/Section'
 import Heading from 'components/atoms/Heading'
 import WordListInput from 'components/molecules/WordListInput'
 import TextAreaSubsection from 'components/organisms/TextAreaSubsection'
 import PreformattedTextSubsection from 'components/organisms/PreformattedTextSubsection'
+import { decode, getWordList } from 'utils/weird-text'
 
 const DecodeSection = () => {
   const [textToDecode, setTextToDecode] = useState('')

@@ -1,10 +1,10 @@
 import React, { useMemo, useState } from 'react'
-import { encode } from 'utils/weird-text'
 import Section from 'components/atoms/Section'
 import Heading from 'components/atoms/Heading'
 import WordListOutput from 'components/molecules/WordListOutput'
 import TextAreaSubsection from 'components/organisms/TextAreaSubsection'
 import PreformattedTextSubsection from 'components/organisms/PreformattedTextSubsection'
+import { encode } from 'utils/weird-text'
 
 const EncodeSection = () => {
   const [textToEncode, setTextToEncode] = useState('')
