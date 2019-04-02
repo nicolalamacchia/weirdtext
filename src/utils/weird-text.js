@@ -101,7 +101,7 @@ export const getWordList = (text, wordPattern = /[a-z]+/gi) =>
     // do not include duplicates
     ...new Set(
       // create an array of words matching `wordPattern`
-      Array.from(text.matchAll(wordPattern), match => match[0]).filter(
+      (text.match(wordPattern) || []).filter(
         // filter out words with the central part containing only repeated characters and short words
         word => !areAllCharsEqual(getWordCenter(word)) && word.length > 3,
       ),
