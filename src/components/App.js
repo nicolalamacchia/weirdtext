@@ -16,15 +16,13 @@ const GlobalStyle = createGlobalStyle`
   }
 `
 
-const App = () => {
-  return (
-    <ThemeProvider theme={theme}>
-      <React.Fragment>
-        <GlobalStyle />
-        <MainPage />
-      </React.Fragment>
-    </ThemeProvider>
-  )
-}
+const App = () => (
+  <ThemeProvider theme={theme}>
+    <React.Fragment>
+      <GlobalStyle />
+      <MainPage />
+    </React.Fragment>
+  </ThemeProvider>
+)
 
 export default App
