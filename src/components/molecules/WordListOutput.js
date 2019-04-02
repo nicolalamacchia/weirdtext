@@ -1,11 +1,11 @@
 import React from 'react'
 import Heading from 'components/atoms/Heading'
-import Input from 'components/atoms/Input'
+import PreWithPlaceholder from 'components/molecules/PreWithPlaceholder'
 
 const WordListInput = ({ title, words }) => (
   <React.Fragment>
     <Heading level="4">{title}</Heading>
-    <p>{words.join(' ')}</p>
+    <PreWithPlaceholder text={words.join(' ')} />
   </React.Fragment>
 )
 

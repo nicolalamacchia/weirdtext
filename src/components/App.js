@@ -20,6 +20,9 @@ const theme = {
   borderColor: '#d5d5d5',
   fgColor: '#444',
   inputBgColor: '#fefefe',
+  errorColor: '#ff6961',
+  placeHolderColor: '#aaa',
+  validTextColor: '#777',
 }
 
 const App = () => {
