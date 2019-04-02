@@ -1,6 +1,7 @@
 import React from 'react'
 import { ThemeProvider, createGlobalStyle } from 'styled-components'
 import MainPage from 'components/pages/MainPage'
+import theme from 'components/theme'
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -14,16 +15,6 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
   }
 `
-
-const theme = {
-  bgColor: '#fafafa',
-  borderColor: '#d5d5d5',
-  fgColor: '#444',
-  inputBgColor: '#fefefe',
-  errorColor: '#ff6961',
-  placeHolderColor: '#aaa',
-  validTextColor: '#777',
-}
 
 const App = () => {
   return (
