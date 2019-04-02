@@ -8,13 +8,16 @@ import { decode, getWordList } from 'utils/weird-text'
 
 const DecodeSection = () => {
   const [textToDecode, setTextToDecode] = useState('')
+  const [error, setError] = useState(null)
   const [usedWords, setUsedWords] = useState([])
 
   const getDecodedText = (textToDecode, usedWords) => {
     try {
-      return decode(textToDecode, usedWords)
+      const decodedText = decode(textToDecode, usedWords)
+      setError(null)
+      return decodedText
     } catch (err) {
-      console.error(err)
+      setError(err.message)
       return ''
     }
   }
@@ -51,7 +54,7 @@ const DecodeSection = () => {
         onChange={handleUsedWordsChange}
       />
 
-      <PreTextSubsection title="Output" subtitle="Decoded text" text={decodedText} />
+      <PreTextSubsection title="Output" subtitle="Decoded text" text={decodedText} error={error} />
     </Section>
   )
 }

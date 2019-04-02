@@ -1,18 +1,26 @@
 import React from 'react'
+import styled from 'styled-components'
 import Subsection from 'components/molecules/Subsection'
 import PreformattedText from 'components/atoms/PreformattedText'
 import withPlaceholder from 'components/hoc/withPlaceholder'
+import withError from 'components/hoc/withError'
 
-// className is needed to style the component through a HOC
-const PreText = ({ text, className }) => (
-  <PreformattedText className={className}>{text}</PreformattedText>
-)
+const PreText = ({ text, ...props }) => <PreformattedText {...props}>{text}</PreformattedText>
 
-const PreWithPlaceHolder = withPlaceholder(PreText)
+const foregroundColor = ({ theme, isValid, hasError, ...props }) => {
+  // prettier-ignore
+  return hasError ? theme.errorColor : (isValid ? theme.validTextColor : theme.placeholderColor)
+}
 
-const PreTextSubsection = ({ title, subtitle, text }) => (
+const StyledPreText = styled(PreText)`
+  color: ${foregroundColor};
+`
+
+const WrappedPreText = withError(withPlaceholder(StyledPreText))
+
+const PreTextSubsection = ({ title, subtitle, text, error }) => (
   <Subsection title={title} subtitle={subtitle}>
-    <PreWithPlaceHolder text={text} />
+    <WrappedPreText text={text} error={error} />
   </Subsection>
 )
 
