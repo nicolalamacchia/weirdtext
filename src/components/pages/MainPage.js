@@ -1,5 +1,4 @@
 import React from 'react'
-import styled from 'styled-components'
 import Main from 'components/atoms/Main'
 import Header from 'components/molecules/Header'
 import EncodeSection from 'components/organisms/EncodeSection'

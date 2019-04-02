@@ -1,9 +1,8 @@
 import React, { useMemo, useState } from 'react'
 import Section from 'components/atoms/Section'
 import Heading from 'components/atoms/Heading'
-import WordListOutput from 'components/molecules/WordListOutput'
 import TextAreaSubsection from 'components/organisms/TextAreaSubsection'
-import PreformattedTextSubsection from 'components/organisms/PreformattedTextSubsection'
+import PreTextSubsection from 'components/organisms/PreTextSubsection'
 import { encode } from 'utils/weird-text'
 
 const EncodeSection = () => {
@@ -26,9 +25,12 @@ const EncodeSection = () => {
         onChange={handleTextToEncodeChange}
       />
 
-      <PreformattedTextSubsection title="Output" subtitle="Encoded text" text={encodedText} />
+      <PreTextSubsection title="Output" subtitle="Encoded text" text={encodedText} />
 
-      <WordListOutput title="List of the original words that got encoded" words={processedWords} />
+      <PreTextSubsection
+        subtitle="List of the original words that got encoded"
+        text={processedWords.join(' ')}
+      />
     </Section>
   )
 }
