@@ -3,16 +3,17 @@ import Subsection from 'components/molecules/Subsection'
 import PreformattedText from 'components/atoms/PreformattedText'
 import withPlaceholder from 'components/hoc/withPlaceholder'
 
-const Pre = ({ text, className }) => (
+// className is needed to style the component through a HOC
+const PreText = ({ text, className }) => (
   <PreformattedText className={className}>{text}</PreformattedText>
 )
 
-const TextWithPlaceholder = withPlaceholder(Pre)
+const PreWithPlaceHolder = withPlaceholder(PreText)
 
-const PreformattedTextSubsection = ({ title, subtitle, text }) => (
+const PreTextSubsection = ({ title, subtitle, text }) => (
   <Subsection title={title} subtitle={subtitle}>
-    <TextWithPlaceholder text={text} />
+    <PreWithPlaceHolder text={text} />
   </Subsection>
 )
 
-export default PreformattedTextSubsection
+export default PreTextSubsection

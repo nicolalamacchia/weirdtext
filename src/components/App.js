@@ -1,5 +1,5 @@
 import React from 'react'
-import styled, { ThemeProvider, createGlobalStyle } from 'styled-components'
+import { ThemeProvider, createGlobalStyle } from 'styled-components'
 import MainPage from 'components/pages/MainPage'
 
 const GlobalStyle = createGlobalStyle`
