@@ -4,17 +4,30 @@ import ReactTestUtils, { act } from 'react-dom/test-utils'
 import EncodeSection from 'components/organisms/EncodeSection'
 
 let container
+let textarea
+// the first `pre` node (encoded output)
+let preEnc
+// the second `pre` node (list of words that have been encoded)
+let preWords
+
+const placeHolderText = 'Type a valid input...'
 
 const setValue = (element, value) => {
   element.value = value
   act(() => {
-    ReactTestUtils.Simulate.change(element);
+    ReactTestUtils.Simulate.change(element)
   })
 }
 
 beforeEach(() => {
   container = document.createElement('div')
+  act(() => {
+    ReactDOM.render(<EncodeSection />, container)
+  })
   document.body.appendChild(container)
+  textarea = container.querySelector('textarea')
+  preEnc = container.querySelector('pre')
+  preWords = container.querySelectorAll('pre')[1]
 })
 
 afterEach(() => {
@@ -24,32 +37,29 @@ afterEach(() => {
 
 describe('EncodeSection', () => {
   test('Initial output', () => {
-    act(() => {
-      ReactDOM.render(<EncodeSection />, container)
-    })
-    // the first `pre` node (encoded output)
-    const pre = container.querySelector('pre');
-    expect(pre.textContent).toBe('Type a valid input...')
+    expect(preEnc.textContent).toBe(placeHolderText)
+    expect(preWords.textContent).toBe(placeHolderText)
   })
 
-  test('Encode', () => {
-    act(() => {
-      ReactDOM.render(<EncodeSection />, container)
-    })
-
-    const textarea = container.querySelector('textarea');
-    const pre = container.querySelector('pre');
-
+  test('Encoded text', () => {
     setValue(textarea, 'hey')
-    expect(pre.textContent).toBe('hey')
+    expect(preEnc.textContent).toBe('hey')
 
     setValue(textarea, 'test')
-    expect(pre.textContent).toBe('tset')
+    expect(preEnc.textContent).toBe('tset')
 
     setValue(textarea, 'testing')
-    expect(pre.textContent[0]).toBe('t')
-    expect(pre.textContent.slice(-1)).toBe('g')
-    expect(pre.textContent.length).toBe(7)
-    expect(pre.textContent).not.toBe('testing')
+    expect(preEnc.textContent[0]).toBe('t')
+    expect(preEnc.textContent.slice(-1)).toBe('g')
+    expect(preEnc.textContent.length).toBe(7)
+    expect(preEnc.textContent).not.toBe('testing')
+  })
+
+  test('Encoded words', () => {
+    setValue(textarea, 'hey')
+    expect(preWords.textContent).toBe(placeHolderText)
+
+    setValue(textarea, 'my dear friend, tell me a story')
+    expect(preWords.textContent).toBe('dear friend story tell')
   })
 })
