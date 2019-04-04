@@ -1,3 +1,6 @@
+// TODO: use shallow renderer
+// TODO: add snapshot testing
+
 import React from 'react'
 import ReactDOM from 'react-dom'
 import ReactTestUtils, { act } from 'react-dom/test-utils'
