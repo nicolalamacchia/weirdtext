@@ -8,8 +8,6 @@
  */
 
 import {
-  areAllCharsEqual,
-  getWordCenter,
   localeCompareSort,
   getReplacePattern,
   distinct,
