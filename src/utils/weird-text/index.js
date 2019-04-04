@@ -31,8 +31,8 @@ import {
 const getWordList = (text, wordPattern = /\w+/gi) => {
   // create an array of words matching `wordPattern`
   const words = (text.match(wordPattern) || []).filter(
-    // filter out words with the central part containing only repeated characters and short words
-    word => !areAllCharsEqual(getWordCenter(word)) && word.length > 3,
+    // filter out words that are too short
+    word => word.length > 3,
   )
   // do not include duplicates (array sorted in a case insensitive way)
   return distinct(words).sort(localeCompareSort)
