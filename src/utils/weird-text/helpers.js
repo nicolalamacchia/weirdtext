@@ -50,10 +50,9 @@ const areAllCharsEqual = word => /^(.)\1*$/.test(word)
  * @function
  * @static
  * @param {string} word - The input word
- * @param {number} [padding=1] - How far from word boundaries
  * @return {string} The central part of the word
  */
-const getWordCenter = (word, padding = 1) => word.slice(padding, -padding)
+const getWordCenter = word => word.slice(1, -1)
 
 /**
  * Weirdify words.
@@ -65,6 +64,11 @@ const getWordCenter = (word, padding = 1) => word.slice(padding, -padding)
 const weirdifyWord = word => {
   if (word.length <= 3) {
     return word
+  }
+
+  // no need to shuffle the word, this is the only way to satisfy weird-text's criteria
+  if (word.length === 4) {
+    return `${word[0]}${word[2]}${word[1]}${word[3]}`
   }
 
   // if all the characters of the middle section are the same, return the unchanged word
@@ -83,6 +87,15 @@ const weirdifyWord = word => {
 }
 
 /**
+ * Return an array with unique values from an input array.
+ * @function
+ * @static
+ * @param {Array} arr
+ * @return {Array}
+ */
+const distinct = arr => [...new Set(arr)]
+
+/**
  * Sorting function helper to perform a case insensitive comparison of strings.
  * This uses a function to compare international words (e.g.: with accents).
  * @function
@@ -96,8 +109,16 @@ const weirdifyWord = word => {
 const localeCompareSort = (a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' })
 
 /**
- * Sorting function based on the weird-text criteria.
- * The input is sorted based on both string extremes and its sorted middle part.
+ * String sorting function based on weird-text's criteria.
+ * The input is sorted based on both its extremes being kept fixed and its sorted middle part.
+ * @param {string} str
+ * @return {string}
+ */
+const middleSorted = str => `${str[0]}${sortString(getWordCenter(str))}${str.slice(-1)}`
+
+/**
+ * Sorting function based on weird-text's criteria.
+ * @see middleSort
  * @function
  * @static
  * @param {string} a
@@ -105,9 +126,6 @@ const localeCompareSort = (a, b) => a.localeCompare(b, undefined, { sensitivity:
  * @return {number}
  */
 const weirdSort = (a, b) => {
-  // return the input string with just the middle part sorted
-  const middleSorted = str => `${str[0]}${sortString(getWordCenter(str))}${str.slice(-1)}`
-
   return localeCompareSort(middleSorted(a), middleSorted(b))
 }
 
@@ -121,27 +139,42 @@ const weirdSort = (a, b) => {
 const getReplacePattern = wordList => new RegExp(wordList.join('|'), 'gi')
 
 /**
- * Return whether one string is a possible encoded version of the other.
- * @function
- * @static
- * @param {string} str1
- * @param {string} str2
- * @return {number}
+ * Return an array stripped of ambiguous words.
+ * Only one word per an ambiguous group of words is kept. The first one
+ * in weird-text order.
+ * @see weirdSort
+ * @example
+ * weirdDistinct(['foobar', 'foboar'])
+ * // returns ['foboar']
+ * @param {string[]} arr
  */
-const areStrCompatible = (str1, str2) =>
-  // prettier-ignore
-  str1.length === str2.length
-  && str1[0] === str2[0]
-  && str1.slice(-1) === str2.slice(-1)
-  && str1.slice(-1) === str2.slice(-1)
-  && sortString(str1) === sortString(str2)
+const weirdDistinct = arr =>
+  arr.sort(weirdSort).reduce((filtered, curr) => {
+    return middleSorted(curr) !== middleSorted(filtered.slice(-1)[0] || '')
+      ? [...filtered, curr]
+      : [...filtered]
+  }, [])
+
+/**
+ * Generate a regex to match weirdified words e.g.: 'hello' -> `/h[ell]{3}o/g`.
+ * @param {string} word - word on wich the regex will be based
+ * @return {RegExp}
+ */
+const weirdMatchRegExp = word => {
+  const wordCenter = getWordCenter(word)
+  const pattern = `${word[0]}[${wordCenter}]{${wordCenter.length}}${word.slice(-1)}`
+  return new RegExp(pattern, 'g')
+}
 
 export {
   areAllCharsEqual,
-  areStrCompatible,
   getWordCenter,
   localeCompareSort,
   weirdSort,
   getReplacePattern,
+  distinct,
+  middleSorted,
   weirdifyWord,
+  weirdDistinct,
+  weirdMatchRegExp,
 }

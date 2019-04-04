@@ -1,38 +1,42 @@
-/** @module weird-text */
+/**
+ * This module implements a space-efficient (for the human) way to encode and decode
+ * text using a weird-text logic. Since there might be ambiguities (for example between
+ * 'foobar' and 'foboar') which are impossible to restore correctly without a deep
+ * analysis of the context (that might not be always available anyway), the implemented
+ * algorithm will not try to guess when decoding an encoded text.
+ * @module weird-text
+ */
 
 import {
   areAllCharsEqual,
-  areStrCompatible,
   getWordCenter,
   localeCompareSort,
   getReplacePattern,
-  weirdSort,
+  distinct,
   weirdifyWord,
+  weirdDistinct,
+  weirdMatchRegExp,
 } from './helpers'
 
 /**
  * Return a list of words satisfying the weird-text criteria from an input text.
- * To match also numbers within words, `wordPattern` should be `/[a-z0-9]+/gi`.
  * It is possible to use a more detailed pattern to match other characters,
  * for example this pattern will match all the latin letters: `/[A-Za-zÀ-ÖØ-öø-ÿ]+/giu`.
  * @function
  * @static
  * @param {string} text - The input text
- * @param {RexExp} [wordPattern=/[a-z]+/gi] - Pattern to match words
+ * @param {RexExp} [wordPattern=/\w+/gi] - Pattern to match words
  * @return {string[]} Words to be weirdified
  */
-const getWordList = (text, wordPattern = /[a-z]+/gi) =>
-  // array sorted in a case insensitive way (see the sorting function documentation for details)
-  [
-    // do not include duplicates
-    ...new Set(
-      // create an array of words matching `wordPattern`
-      (text.match(wordPattern) || []).filter(
-        // filter out words with the central part containing only repeated characters and short words
-        word => !areAllCharsEqual(getWordCenter(word)) && word.length > 3,
-      ),
-    ),
-  ].sort(localeCompareSort)
+const getWordList = (text, wordPattern = /\w+/gi) => {
+  // create an array of words matching `wordPattern`
+  const words = (text.match(wordPattern) || []).filter(
+    // filter out words with the central part containing only repeated characters and short words
+    word => !areAllCharsEqual(getWordCenter(word)) && word.length > 3,
+  )
+  // do not include duplicates (array sorted in a case insensitive way)
+  return distinct(words).sort(localeCompareSort)
+}
 
 /**
  * Encode the input text.
@@ -59,30 +63,24 @@ const encode = text => {
  * @return {string} Decoded text
  */
 const decode = (text, wordList) => {
-  const invalidInputError = reason =>
-    new Error(`Invalid input: encoded text and original words are not compatible (${reason})`)
+  const invalidInputError = reason => new Error(`Invalid input: ${reason}`)
 
-  const encodedWordList = getWordList(text)
+  const distinctEncodedWords = weirdDistinct(getWordList(text))
+  const distinctOriginalWords = weirdDistinct(wordList)
+
   // loose sanity check
-  if (encodedWordList.length !== wordList.length) {
-    throw invalidInputError('different number of words')
+  if (distinctEncodedWords.length !== distinctOriginalWords.length) {
+    throw invalidInputError(
+      'encoded text and original words are not compatible (different number of words)',
+    )
   }
-  const sortedOrigWordList = wordList.sort(weirdSort)
-  const sortedEncodedWordList = encodedWordList.sort(weirdSort)
 
   let decodedText = text
 
-  for (let i = 0; i < sortedEncodedWordList.length; i += 1) {
-    // word-level sanity check
-    if (!areStrCompatible(sortedOrigWordList[i], sortedEncodedWordList[i])) {
-      throw invalidInputError('some words are not compatible')
-    }
-
-    decodedText = decodedText.replace(
-      new RegExp(sortedEncodedWordList[i], 'g'),
-      sortedOrigWordList[i],
-    )
-  }
+  distinctOriginalWords.forEach(word => {
+    const wordMatchRegExp = weirdMatchRegExp(word)
+    decodedText = decodedText.replace(wordMatchRegExp, word)
+  })
 
   return decodedText
 }
