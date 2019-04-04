@@ -4,9 +4,7 @@ import Heading from 'components/atoms/Heading'
 const Subsection = ({ title, subtitle, children }) => {
   return (
     <React.Fragment>
-      {(title && title.trim() !== '') &&
-        <Heading level="3">{title}</Heading>
-      }
+      {title && title.trim() !== '' && <Heading level="3">{title}</Heading>}
       <Heading level="4">{subtitle}</Heading>
       {children}
     </React.Fragment>
