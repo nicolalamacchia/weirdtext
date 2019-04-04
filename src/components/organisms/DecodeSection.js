@@ -6,6 +6,12 @@ import TextAreaSubsection from 'components/organisms/TextAreaSubsection'
 import PreTextSubsection from 'components/organisms/PreTextSubsection'
 import { decode, getWordList } from 'utils/weird-text'
 
+/**
+ * The tokenization part of the following regex should be less granular
+ * (or, at most, as granular as) the tokenization regex used in `getWordList`
+ */
+const validateWordsText = text => /^(?:\w{4,}\s*)+$/.test(text)
+
 const DecodeSection = () => {
   const [textToDecode, setTextToDecode] = useState('')
   const [error, setError] = useState(null)
@@ -30,7 +36,12 @@ const DecodeSection = () => {
   const handleUsedWordsChange = event => {
     const text = event.currentTarget.value
 
-    setUsedWords(getWordList(text))
+    if (!validateWordsText(text)) {
+      setError('Invalid input: words can contain only letters and numbers (at least four)')
+    } else {
+      // getWordList might be an overkill, but enforces the right tokenization
+      setUsedWords(getWordList(text))
+    }
   }
 
   const handleTextToDecodeChange = event => {
@@ -39,6 +50,11 @@ const DecodeSection = () => {
     setTextToDecode(text.trim())
   }
 
+  /**
+   * TODO: show a warning if ambiguities are detected, using `weirdDistinct`
+   * on the word list and comparing its length to the original word list length:
+   * if there are ambiguities, the weirdDistinct'ed list will be shorter
+   */
   return (
     <Section>
       <Heading level="2">Decoder</Heading>
