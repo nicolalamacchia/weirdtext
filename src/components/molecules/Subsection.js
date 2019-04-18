@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import Heading from 'components/atoms/Heading'
 
 const Subsection = ({ title, subtitle, children }) => {
@@ -9,6 +10,11 @@ const Subsection = ({ title, subtitle, children }) => {
       {children}
     </React.Fragment>
   )
+}
+
+Subsection.propTypes = {
+  title: PropTypes.string,
+  subtitle: PropTypes.string,
 }
 
 export default Subsection
