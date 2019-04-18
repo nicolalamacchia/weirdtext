@@ -12,15 +12,9 @@
 const shuffle = str => {
   let arr = Array.from(str)
 
-  // shuffle the array in-place
-  for (let i = arr.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1))
+  const shuffled = arr.sort((a, b) => 0.5 - Math.random()).join('')
 
-    // the following line is a little slower than using a temporary variable
-    ;[arr[i], arr[j]] = [arr[j], arr[i]]
-  }
-
-  return arr.join('')
+  return shuffled !== str ? shuffled : shuffle(str)
 }
 
 /**
