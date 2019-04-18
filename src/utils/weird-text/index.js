@@ -8,6 +8,8 @@
  */
 
 import {
+  areAllCharsEqual,
+  getWordCenter,
   localeCompareSort,
   getReplacePattern,
   distinct,
@@ -30,7 +32,7 @@ const getWordList = (text, wordPattern = /\w+/gi) => {
   // create an array of words matching `wordPattern`
   const words = (text.match(wordPattern) || []).filter(
     // filter out words that are too short
-    word => word.length > 3,
+    word => !areAllCharsEqual(getWordCenter(word)) && word.length > 3,
   )
   // do not include duplicates (array sorted in a case insensitive way)
   return distinct(words).sort(localeCompareSort)
@@ -73,12 +75,9 @@ const decode = (text, wordList) => {
     )
   }
 
-  let decodedText = text
-
-  distinctOriginalWords.forEach(word => {
-    const wordMatchRegExp = weirdMatchRegExp(word)
-    decodedText = decodedText.replace(wordMatchRegExp, word)
-  })
+  const decodedText = distinctOriginalWords.reduce((textWithSubs, word) => {
+    return textWithSubs.replace(weirdMatchRegExp(word), word)
+  }, text)
 
   return decodedText
 }

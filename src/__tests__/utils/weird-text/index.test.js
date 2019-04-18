@@ -19,6 +19,12 @@ test('Decode a string', () => {
   let expectedOutput
   let decodedText
 
+  inputText = 'Tihs is a lnog loonog tset snentece, wtih smoe big (biiiiig) wrods!'
+  inputWords = ['long', 'looong', 'sentence', 'some', 'test', 'This', 'with', 'words']
+  expectedOutput = 'This is a long looong test sentence, with some big (biiiiig) words!'
+  decodedText = decode(inputText, inputWords)
+  expect(decodedText).toEqual(expectedOutput)
+
   inputText = 'hlelo my daer firend'
   inputWords = ['dear', 'friend', 'hello']
   expectedOutput = 'hello my dear friend'
@@ -44,6 +50,11 @@ test('Get word list from text', () => {
   let inputText
   let expectedOutput
   let wordList
+
+  inputText = 'This is a long looong test sentence,\nwith some big (biiiiig) words!'
+  expectedOutput = ['long', 'looong', 'sentence', 'some', 'test', 'This', 'with', 'words']
+  wordList = getWordList(inputText)
+  expect(wordList).toEqual(expectedOutput)
 
   inputText = 'Hello my dear friend string2integer'
   expectedOutput = ['dear', 'friend', 'Hello', 'string2integer']
