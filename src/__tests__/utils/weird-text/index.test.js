@@ -1,3 +1,7 @@
+// TODO: a much better approach would be to test each individual
+// part (the smallest individually testable part)
+// instead of testing the whole logic in one place
+
 import { encode, decode, getWordList } from 'utils/weird-text'
 
 test('Encode a string', () => {
